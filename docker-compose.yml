@@ -1,0 +1,34 @@
+version: "3.7"
+
+services:
+    # Buildando imagem PHP / Composer ...etc
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+    # NGINX
+    nginx:
+        image: nginx:alpine
+        restart: unless-stopped
+        ports:
+            - "80:80"
+        volumes:
+            - caminho absoluto:/var/www
+            - caminho absoluto:/etc/nginx/conf.d/
+    # MYSQL
+    mysql:
+        image: mysql:8.0.32
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+        volumes:
+            - caminho absoluto:/var/lib/mysql
+        ports:
+            - "3306:3306"
